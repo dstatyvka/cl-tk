@@ -9,4 +9,7 @@
            #:bind-event
            #:with-local-events #:event-snapshot #:clear-events
            #:doevent #:doevents #:mainloop
-           #:wish-tk #:ffi-tk #:destroy #:alive-p))
+           #:wish-tk #:ffi-tk #:destroy #:alive-p
+           #:start-gui-loop
+           #:call-in-gui-thread
+           #:with-gui-thread))

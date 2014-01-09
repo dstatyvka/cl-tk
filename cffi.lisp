@@ -28,3 +28,35 @@
 (cffi:defcfun ("Tk_Init" tk-init) :int (interp :pointer))
 
 (defun null-pointer-p (ptr) (cffi:null-pointer-p ptr))
+
+(cffi:defcfun ("Tcl_Alloc" tcl-alloc) :pointer (size :uint))
+
+(cffi:defcenum tcl-queue-position
+  :tail :head :mark)
+
+(cffi:defctype tcl-thread :pointer)
+
+(cffi:defcstruct tcl-event
+  (proc :pointer)
+  (next :pointer))
+
+(cffi:defcstruct (gui-event)
+  (tcl-event tcl-event))
+
+(cffi:defcfun ("Tcl_GetCurrentThread" tcl-get-current-thread) tcl-thread)
+
+(cffi:defcfun ("Tcl_ThreadQueueEvent" tcl-thread-queue-event)  :void
+  (thread tcl-thread)
+  (event tcl-event)
+  (position tcl-queue-position))
+
+(defun make-tcl-event (callback)
+  (let ((gui-event (tcl-alloc (cffi:foreign-type-size 'gui-event))))
+    (cffi:with-foreign-slots ((tcl-event) gui-event gui-event)
+      (cffi:with-foreign-slots ((proc next) tcl-event tcl-event)
+        (setf proc callback
+              next (cffi:null-pointer))))
+    gui-event))
+
+(cffi:defcfun ("Tcl_ThreadAlert" tcl-thread-alert) :void
+  (thread tcl-thread))
