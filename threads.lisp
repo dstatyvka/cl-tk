@@ -28,7 +28,7 @@
                                         *tk-queue* (make-tk-queue))
                                   (mainloop))
                         (makunbound '*tk-thread*)
-                        (makunbound '*tk-queue*)))))
+                        (makunbound '*tk-queue*))))
                   :name "gui"))
 
 (defun call-in-gui-thread (funcallable)
