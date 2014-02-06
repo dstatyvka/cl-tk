@@ -12,7 +12,7 @@
 (defun pop-tk-queue ()
   (sb-concurrency:receive-message-no-hang *tk-queue*))
 
-(cffi:defcallback process-tk-queue :int ((event tcl-event) (flags :int))
+(cffi:defcallback process-tk-queue :int ((event (:pointer (:struct tcl-event))) (flags :int))
   (declare (ignore event flags))
   (let ((funcallable (pop-tk-queue)))
     (when funcallable

@@ -40,23 +40,19 @@
   (proc :pointer)
   (next :pointer))
 
-(cffi:defcstruct (gui-event)
-  (tcl-event tcl-event))
-
 (cffi:defcfun ("Tcl_GetCurrentThread" tcl-get-current-thread) tcl-thread)
 
 (cffi:defcfun ("Tcl_ThreadQueueEvent" tcl-thread-queue-event)  :void
   (thread tcl-thread)
-  (event tcl-event)
+  (event (:pointer (:struct tcl-event)))
   (position tcl-queue-position))
 
 (defun make-tcl-event (callback)
-  (let ((gui-event (tcl-alloc (cffi:foreign-type-size 'gui-event))))
-    (cffi:with-foreign-slots ((tcl-event) gui-event gui-event)
-      (cffi:with-foreign-slots ((proc next) tcl-event tcl-event)
-        (setf proc callback
-              next (cffi:null-pointer))))
-    gui-event))
+  (let ((tcl-event (tcl-alloc (cffi:foreign-type-size '(:struct tcl-event)))))
+    (cffi:with-foreign-slots ((proc next) tcl-event (:struct tcl-event))
+      (setf proc callback
+	    next (cffi:null-pointer)))
+    tcl-event))
 
 (cffi:defcfun ("Tcl_ThreadAlert" tcl-thread-alert) :void
   (thread tcl-thread))
