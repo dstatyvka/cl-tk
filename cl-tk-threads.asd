@@ -10,6 +10,8 @@
                (:file "base" :depends-on ("package"))
                (:file "wish" :depends-on ("base"))
                #+(and (not allegro) cffi) (:file "cffi" :depends-on ("base"))
+	       #+(and (not allegro) cffi) (:file "proc" :depends-on ("cffi"))
                #+allegro (:file "acl" :depends-on ("base"))
                #+(or cffi allegro) (:file "ffi" :depends-on (#+(and (not allegro) cffi) "cffi" #+allegro "acl"))
+	       (:file "cffi-ext" :depends-on ("ffi"))
                #+sbcl (:file "threads" :depends-on ("cffi"))))

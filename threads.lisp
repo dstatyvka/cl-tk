@@ -17,16 +17,17 @@
   (let ((funcallable (pop-tk-queue)))
     (when funcallable
       (with-simple-restart (continue "Continue GUI loop")
-        (funcall funcallable))
-      1)))
+        (funcall funcallable)))
+    1))
 
 (defun start-gui-loop ()
   (bt:make-thread (lambda ()
                     (cl-tk:with-tk ()
                       (unwind-protect
-                           (progn (setf *tk-thread* (tcl-get-current-thread)
-                                        *tk-queue* (make-tk-queue))
-                                  (mainloop))
+                           (progn
+			     (setf *tk-thread* (tcl-get-current-thread)
+				   *tk-queue* (make-tk-queue))
+			     (cffi:foreign-funcall "Tk_MainLoop"))
                         (makunbound '*tk-thread*)
                         (makunbound '*tk-queue*))))
                   :name "gui"))
@@ -37,4 +38,8 @@
   (tcl-thread-alert *tk-thread*))
 
 (defmacro with-gui-thread (() &body body)
-  `(call-in-gui-thread (lambda () ,@body)))
+  ;; `(call-in-gui-thread (lambda () ,@body))
+  (alexandria:with-gensyms (trace-output)
+    `(let ((,trace-output *trace-output*))
+       (call-in-gui-thread (lambda () (let ((*trace-output* ,trace-output)),@body)))))
+  )
