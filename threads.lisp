@@ -12,13 +12,17 @@
 (defun pop-tk-queue ()
   (sb-concurrency:receive-message-no-hang *tk-queue*))
 
-(cffi:defcallback process-tk-queue :int ((event (:pointer (:struct tcl-event))) (flags :int))
+(cffi:defcallback process-tk-queue tcl-result ((event (:pointer (:struct tcl-event))) (flags :int))
   (declare (ignore event flags))
-  (let ((funcallable (pop-tk-queue)))
-    (when funcallable
-      (with-simple-restart (continue "Continue GUI loop")
-        (funcall funcallable)))
-    1))
+  (handler-case 
+      (prog1 :ok
+	(let ((funcallable (pop-tk-queue)))
+	  (unless (null funcallable)
+	    (with-simple-restart (continue "Continue GUI loop")
+	      (funcall funcallable)))))
+    (serious-condition (condition)
+      (prog1 :error
+	(%set-result (@interp *tk*) (format nil "~s" condition) (cffi:make-pointer 1))))))
 
 (defun start-gui-loop ()
   (bt:make-thread (lambda ()
