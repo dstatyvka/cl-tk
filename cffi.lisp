@@ -91,14 +91,20 @@
   (objv :pointer))
 
 (defmacro with-objv ((buffer-var length-var list) &body body)
-  (let ((i (gensym)) (v (gensym)))
+  (let ((i (gensym)) (v (gensym)) (fv (gensym)) (objects (gensym)))
     `(cffi:with-foreign-object (,buffer-var 'tcl-obj ,length-var)
        (loop
 	  :for ,i :from 0 
 	  :for ,v :in ,list
-	  :do (setf (cffi:mem-aref ,buffer-var 'tcl-obj ,i)
-		    (lisp-to-tcl ,v)))
-       ,@body)))
+	  :for ,fv = (lisp-to-tcl ,v)
+	  :collect ,fv :into ,objects
+	  :do (tcl-incr-ref-count ,fv)
+	  :do (setf (cffi:mem-aref ,buffer-var 'tcl-obj ,i) ,fv)
+	  :finally
+	  (unwind-protect (progn ,@body)
+	    (loop :for ,fv :in ,objects
+	       :do (tcl-decr-ref-count ,fv))))
+       )))
 
 (defun %tcl-new-list-obj (list &aux (n (length list)))
   (with-objv (buffer n list)
