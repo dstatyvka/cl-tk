@@ -39,14 +39,17 @@
 		    (t ch)) out))))
 
 (defun lisp-to-tcl (value)
-  (etypecase value
+  (typecase value
     (string (%new-string-obj  value))
     (keyword (%new-string-obj (format nil "-~(~a~)" value)))
-    (symbol (let ((tcl-name (get value :tcl-name)))
-	      (assert (not (null tcl-name)) (tcl-name) "~s has no TCL-name" value)
-	      (%new-string-obj tcl-name)))
+    ((and symbol (not null))
+     (let ((tcl-name (get value :tcl-name)))
+       (assert (not (null tcl-name)) (tcl-name) "~s has no TCL-name" value)
+       (%new-string-obj tcl-name)))
     ((signed-byte 32) (tcl-new-int-obj value))
-    (list (%tcl-new-list-obj value))))
+    (double-float (tcl-new-double-obj value))
+    (list (%tcl-new-list-obj value))
+    (t (%new-string-obj (prin1-to-string value)))))
 
 
 

@@ -118,7 +118,13 @@
   (tcl-obj tcl-obj)
   (intPtr :pointer))
 
+(cffi:defcfun ("Tcl_NewDoubleObj" tcl-new-double-obj) tcl-obj
+  (value :double))
 
+(cffi:defcfun ("Tcl_GetDoubleFromObj" tcl-get-double-from-obj) :double
+  (doubleerp :pointer)
+  (tcl-obj tcl-obj)
+  (doublePtr :pointer))
 
 ;; (cffi:defcfun ("Tcl_GetObjType"))
 
