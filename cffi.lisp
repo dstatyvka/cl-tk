@@ -101,10 +101,10 @@
 	  :do (tcl-incr-ref-count ,fv)
 	  :do (setf (cffi:mem-aref ,buffer-var 'tcl-obj ,i) ,fv)
 	  :finally
-	  (unwind-protect (progn ,@body)
-	    (loop :for ,fv :in ,objects
-	       :do (tcl-decr-ref-count ,fv))))
-       )))
+	  (return
+            (unwind-protect (progn ,@body)
+              (loop :for ,fv :in ,objects
+                 :do (tcl-decr-ref-count ,fv))))))))
 
 (defun %tcl-new-list-obj (list &aux (n (length list)))
   (with-objv (buffer n list)
