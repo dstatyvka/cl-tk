@@ -139,7 +139,7 @@
 (defmethod sax:comment ((sink text-widget-sink) data)
   (with-text-tags ("comment")
     (add-to-text-widget-sink "<!--" sink)
-    (map nil (lambda (c) (add-to-text-widget-sink c sink)) data)
+    (add-to-text-widget-sink data sink)
     (add-to-text-widget-sink "-->" sink)))
 
 (defun test-show-xml (xml-source)
