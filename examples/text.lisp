@@ -142,15 +142,11 @@
     (add-to-text-widget-sink data sink)
     (add-to-text-widget-sink "-->" sink)))
 
-(defun test-show-xml (xml-source)
-  (let ((sink (make-instance 'text-widget-sink :text ".text"))
-        (doc (cxml:parse xml-source (cxml-dom:make-dom-builder))))
+(defun text-show-xml (widget doc &key omit-xml-declaration-p)
+  (let ((sink (make-instance 'text-widget-sink :text widget :omit-xml-declaration-p omit-xml-declaration-p)))
     (cl-tk:with-gui-thread ()
-      (time
-       (progn
-         (cl-tk:tcl ".text" "delete" "1.0" "end")
-         (let ((*indent-level* 0) *tags* *stack*)
-           (dom:map-document sink doc)))))))
+      (let ((*indent-level* 0) *tags* *stack*)
+           (dom:map-document sink doc)))))
 
 (define-gui-function show-xml-in-text (xml-document &optional (text ".text"))
   (cl-tk:tcl ".text" "delete" "1.0" "end")
