@@ -8,7 +8,6 @@
                  #+sbcl #:sb-concurrency)
   :components ((:file "package")
                (:file "base" :depends-on ("package"))
-               (:file "wish" :depends-on ("base"))
                #+(and (not allegro) cffi) (:file "cffi" :depends-on ("base"))
 	       #+(and (not allegro) cffi) (:file "proc" :depends-on ("cffi"))
                #+allegro (:file "acl" :depends-on ("base"))
