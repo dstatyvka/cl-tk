@@ -17,7 +17,8 @@
     (cl-tk:tcl "grid" "rowconfigure" "." 0 :weight 1)))
 
 (defclass text-widget-sink (sax:content-handler)
-  ((text :initarg :text  :accessor text :initform (error "Name of the target text widget must be specified"))))
+  ((text :initarg :text :accessor text :initform (error "Name of the target text widget must be specified"))
+   (omit-xml-declaration-p :initarg :omit-xml-declaration-p :accessor omit-xml-declaration-p)))
 
 (defvar  *indent-level*)
 (defvar *tags*)
@@ -36,9 +37,9 @@
   (cl-tk:tcl (text sink) "insert" "end" text *tags*))
 
 (defmethod sax:start-document ((sink text-widget-sink))
-  (with-text-tags ("markup")
-    (add-to-text-widget-sink "<?xml version='1.0'?>
-" sink)))
+  (unless (omit-xml-declaration-p sink)
+    (with-text-tags ("markup")
+      (add-to-text-widget-sink "<?xml version='1.0'?>" sink))))
 
 (defun text-widget-fresh-line (sink)
   (unless (string= (cl-tk:tcl ".text" "index" "insert")
