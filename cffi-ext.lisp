@@ -44,13 +44,13 @@
 
 
 
-(defmethod tcl-send ((tk ffi-tk) command &optional (get-result t) &aux (objc (length command)))
+(defun tcl-send (tk command &optional (get-result t) &aux (objc (length command)))
   (with-objv (objv objc command)
-    (case (tcl-eval-obj-v (@interp tk) objc objv 0)
-      (#.+tcl-error+ (tcl-error (tcl-to-lisp (@interp tk)
-					     (tcl-get-obj-result (@interp tk)))))
-      (#.+tcl-ok+ (when get-result (tcl-to-lisp (@interp tk)
-						(tcl-get-obj-result (@interp tk))))))))
+    (case (tcl-eval-obj-v tk objc objv 0)
+      (#.+tcl-error+ (tcl-error
+		      (tcl-to-lisp tk (tcl-get-obj-result tk))))
+      (#.+tcl-ok+ (when get-result
+		    (tcl-to-lisp tk (tcl-get-obj-result tk)))))))
 
 (cffi:defcstruct tcl-token
   (type :int)

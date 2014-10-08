@@ -22,7 +22,7 @@
   (:continue 4))
 
 (defun register-proc (proc-name)
-  (%create-command (@interp *tk*) (get proc-name :tcl-name) (cffi:get-callback proc-name)
+  (%create-command *tk* (get proc-name :tcl-name) (cffi:get-callback proc-name)
 		   (cffi-sys:null-pointer)
 		   (cffi-sys:null-pointer)))
 
