@@ -34,24 +34,6 @@
 (defun tcl (&rest words)
   (tcl-send *tk* words))
 
-;; wnames
-
-(defun wname-cons (name base)
-  (format nil "~a.~a" (if (string= base ".") "" base) name))
-(flet ((find-dot (name)
-         (or (position #\. name :from-end t)
-             (tcl-error "~a is not a valid wname" name))))
-  (defun wname-car (name)
-    (subseq name (1+ (find-dot name))))
-  (defun wname-cdr (name)
-    (subseq name 0 (max 1 (find-dot name)))))
-
-(defvar *wname* ".")
-(defmacro with-wname (name &body body)
-  `(let ((*wname* ,name)) ,@body))
-(defun wname (name &optional id)
-  (wname-cons (if id (format nil "~a~a" name id) name) *wname*))
-
 ;; Running a Tk instance
 
 (defun start-tk (&optional back-end)
