@@ -53,7 +53,7 @@
 
 
 
-(defmethod tcl-send-2 ((tk ffi-tk) command &optional (get-result t) &aux (objc (length command)))
+(defmethod tcl-send ((tk ffi-tk) command &optional (get-result t) &aux (objc (length command)))
   (unless (@alive tk) (tcl-error "Tk instance no longer alive."))
   (with-objv (objv objc command)
     (case (tcl-eval-obj-v (@interp tk) objc objv 0)

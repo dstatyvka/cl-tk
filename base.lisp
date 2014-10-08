@@ -41,7 +41,7 @@
 (defstruct (literal-string (:constructor lit (val))) val)
 
 (defun tcl (&rest words)
-  (tcl-send-2 *tk* words))
+  (tcl-send *tk* words))
 
 ;; wnames
 
