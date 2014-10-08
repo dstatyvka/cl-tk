@@ -87,23 +87,6 @@
 
 (defstruct (literal-string (:constructor lit (val))) val)
 
-(defun tcl-form (val)
-  (etypecase val
-    (keyword (format nil "-~a" (string-downcase (symbol-name val))))
-    (string (tcl-escape val))
-    (number (princ-to-string val))
-    (literal-string (literal-string-val val))
-    (list (format nil "~{~a~^ ~}" (mapcar #'tcl-form val)))))
-
-;; (flet ((as-string (before after command args)
-;;          (format nil "~a~a~{ ~a~}~a" before command (mapcar 'tcl-form args) after)))
-;;   (defun tcl[ (command &rest args)
-;;     (lit (as-string #\[ #\] command args)))
-;;   (defun tcl{ (command &rest args)
-;;     (lit (as-string #\{ #\} command args)))
-;;   (defun tcl (command &rest args)
-;;     (tcl-send *tk* (as-string "" "" command args))))
-
 (defun tcl (&rest words)
   (tcl-send-2 *tk* words))
 
