@@ -29,15 +29,6 @@
     ((string= "list" type) (tcl-list-to-lisp interp tcl-obj))
     (t (%get-string-from-obj tcl-obj))))
 
-(defun tcl-escape2 (str)
-  (with-output-to-string (out)
-    (loop :for ch :across str
-       :do (princ (case ch
-		    (#\newline "\\n") (#\tab "\\t") (#\backspace "\\b")
-		    (#\page "\\f") (#\return "\\r") (#\vt "\\v") (#\bell "\\a")
-		    ((#\" #\\ #\[ #\] #\$ #\space #\} #\{ #\;) (princ #\\ out) ch)
-		    (t ch)) out))))
-
 (defun lisp-to-tcl (value)
   (typecase value
     (string (%new-string-obj  value))

@@ -18,19 +18,6 @@
 
 ;; Tcl commands
 
-(defun tcl-escape (str)
-  (if (string= str "")
-      "{}"
-      (with-output-to-string (out)
-        (loop :for ch :across str
-              :do (princ (case ch
-                           (#\newline "\\n") (#\tab "\\t") (#\backspace "\\b")
-                           (#\page "\\f") (#\return "\\r") (#\vt "\\v") (#\bell "\\a")
-                           ((#\" #\\ #\[ #\] #\$ #\space #\} #\{ #\;) (princ #\\ out) ch)
-                           (t ch)) out)))))
-
-(defstruct (literal-string (:constructor lit (val))) val)
-
 (defun tcl (&rest words)
   (tcl-send *tk* words))
 
