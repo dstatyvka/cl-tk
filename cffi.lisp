@@ -11,9 +11,6 @@
 (cffi:defcfun ("Tcl_GetStringResult" get-string-result) (:string :encoding :utf-8) (interp :pointer))
 (cffi:defcfun ("Tcl_DoOneEvent" do-one-event) :int (flags :int))
 (cffi:defcfun ("Tk_Init" tk-init) :int (interp :pointer))
-
-(defun null-pointer-p (ptr) (cffi:null-pointer-p ptr))
-
 (cffi:defcfun ("Tcl_Alloc" tcl-alloc) :pointer (size :uint))
 
 (cffi:defcenum tcl-queue-position
@@ -64,7 +61,7 @@
 (defun %get-string-from-obj (obj)
   (cffi:with-foreign-object (length :int)
     (let ((p (tcl-get-string-from-obj obj length)))
-      (unless (cffi-sys:null-pointer-p p)
+      (unless (cffi:null-pointer-p p)
 	(cffi:foreign-string-to-lisp p :count (cffi:mem-ref length :int) :encoding :utf-8)))))
 
 (defun %new-string-obj (string)

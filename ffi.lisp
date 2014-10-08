@@ -10,7 +10,7 @@
 (defun start-tk ()
   (format *trace-output* ";; let's create interp ~&")
   (let ((int (create-interp)))
-    (when (null-pointer-p int) (tcl-error "Could not create interpreter."))
+    (when (cffi:null-pointer-p int) (tcl-error "Could not create interpreter."))
     (unless (and (= (tcl-init int) +tcl-ok+) (= (tk-init int) +tcl-ok+))
       (tcl-error "Initialising Tcl/Tk failed."))
     (let ((*tk* int))

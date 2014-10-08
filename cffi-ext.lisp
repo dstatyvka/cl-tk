@@ -8,7 +8,7 @@
 
 (defun tcl-type-name (tcl-obj)
   (let ((type (cffi:mem-aref tcl-obj :pointer 3)))
-    (unless (cffi-sys:null-pointer-p type)
+    (unless (cffi:null-pointer-p type)
       (cffi:foreign-string-to-lisp (cffi:mem-ref type :pointer) :encoding :utf-8))))
 
 (defun tcl-list-to-lisp (interp tcl-obj)
