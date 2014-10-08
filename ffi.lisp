@@ -1,6 +1,6 @@
 (in-package :cl-tk)
 
-(eval-when (compile eval load)
+(eval-when (:compile-toplevel :execute :load-toplevel)
   (defconstant +tcl-ok+ 0)
   (defconstant +tcl-error+ 1)
   (defconstant +tcl-dont-wait+ 2))
