@@ -27,12 +27,6 @@
 (defmethod tk-alive-p ((tk ffi-tk))
   (@alive tk))
 
-(defmethod tcl-send ((tk ffi-tk) command &optional (get-result t))
-  (unless (@alive tk) (tcl-error "Tk instance no longer alive."))
-  (case (tcl-eval (@interp tk) command)
-    (#.+tcl-error+ (tcl-error (get-string-result (@interp tk))))
-    (#.+tcl-ok+ (when get-result (get-string-result (@interp tk))))))
-
 (defmethod tk-doevent ((tk ffi-tk) &optional block)
   (unless (@alive tk) (return-from tk-doevent nil))
   (when (= (do-one-event (if block 0 +tcl-dont-wait+)) 1)
