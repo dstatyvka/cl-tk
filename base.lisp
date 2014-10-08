@@ -7,54 +7,7 @@
 (defvar *tk*)
 
 (defclass tk ()
-  ((event-table :initform (make-hash-table :test 'eql) :reader @table)
-   (next-id :initform 0 :accessor @next-id)))
-
-;; Event callback registration
-
-(defun register-event (handler)
-  (let ((id (@next-id *tk*)))
-    (incf (@next-id *tk*))
-    (setf (gethash id (@table *tk*)) handler)
-    id))
-
-(defun unregister-event (id)
-  (remhash id (@table *tk*)))
-
-(defun event-handler (func &optional (fields ()))
-  (let ((id (register-event func)))
-    (values (format nil "_ev ~a~{ %~a~}" id fields) id)))
-
-(defmacro event-handler* (&body body)
-  `(event-handler (lambda () ,@body)))
-
-(defmacro bind-event (tag event (&rest fields) &body body)
-  "For example (bind-event \".\" \"<1>\" ((x #\x) (y #\y)) (format t \"clicked ~a,~a\" x y))"
-  `(multiple-value-bind (handler id) (event-handler (lambda ,(mapcar #'first fields) ,@body) ',(mapcar #'second fields))
-     (tcl "bind" ,tag ,event handler)
-     id))
-
-(defun handle-event (tk id args)
-  (let ((handler (gethash id (@table tk))))
-    (if handler
-        (apply handler args)
-        (warn "Event '~a' fired, but no handler exists." id))))
-
-(defun event-snapshot ()
-  (@next-id *tk*))
-(defun clear-events (snapshot)
-  (let ((tab (@table *tk*)))
-    (maphash (lambda (k v)
-               (declare (ignore v))
-               (when (>= k snapshot) (remhash k tab)))
-             tab)
-    (setf (@next-id *tk*) snapshot)))
-
-(defmacro with-local-events (&body body)
-  (let ((snap (gensym)))
-    `(let ((,snap (event-snapshot)))
-       (unwind-protect (progn ,@body)
-         (clear-events ,snap)))))
+  ())
 
 ;; Methods on tk objects
 
