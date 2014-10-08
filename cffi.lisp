@@ -126,8 +126,6 @@
   (tcl-obj tcl-obj)
   (doublePtr :pointer))
 
-;; (cffi:defcfun ("Tcl_GetObjType"))
-
 (cffi:defcfun ("Tcl_ListObjGetElements" tcl-list-obj-get-elements) :int
   (interp :pointer)
   (listPtr tcl-obj)
