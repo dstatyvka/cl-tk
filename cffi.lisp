@@ -1,23 +1,8 @@
 (in-package :cl-tk)
 
-(cffi:define-foreign-library tcl
-  (:darwin (:framework "Tcl"))
-  (:windows (:or "tcl85.dll"))
-  (:unix (:or "libtcl8.5.so" "libtcl.so"))
-  (t (:default "libtcl")))
-
-(cffi:define-foreign-library tk
-  (:darwin (:framework "Tk"))
-  (:windows (:or "tk85.dll"))
-  (:unix (:or "libtk8.5.so" "libtk.so"))
-  (t (:default "libtk")))
-
-(let ((loaded nil))
-  (defun load-libs ()
-    (unless loaded
-      (cffi:use-foreign-library tcl)
-      (cffi:use-foreign-library tk)
-      (setf loaded t))))
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (cffi:use-foreign-library tcl)
+  (cffi:use-foreign-library tk))
 
 (cffi:defcfun ("Tcl_CreateInterp" create-interp) :pointer)
 (cffi:defcfun ("Tcl_DeleteInterp" delete-interp) :void (interp :pointer))

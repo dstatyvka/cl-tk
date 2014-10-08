@@ -11,8 +11,6 @@
 
 (defmethod initialize-instance :after ((tk ffi-tk) &key &allow-other-keys)
   (format *trace-output* ";; let's create interp ~&")
-  (handler-case (load-libs)
-    (error (e) (tcl-error (princ-to-string e))))
   (let ((int (create-interp)))
     (when (null-pointer-p int) (tcl-error "Could not create interpreter."))
     (unless (and (= (tcl-init int) +tcl-ok+) (= (tk-init int) +tcl-ok+))
