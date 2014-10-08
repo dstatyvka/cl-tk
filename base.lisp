@@ -12,16 +12,7 @@
 ;; Methods on tk objects
 
 (defgeneric tk-destroy (tk))
-(defgeneric tk-alive-p (tk))
 (defun destroy () (tk-destroy *tk*))
-(defun alive-p () (tk-alive-p *tk*))
-
-(defgeneric tk-doevent (tk &optional block))
-(defun doevent (&optional block) (tk-doevent *tk* block))
-(defun doevents () (loop :while (doevent)))
-(defun mainloop ()
-  (loop :while (alive-p)
-        :do (doevent t)))
 
 (defgeneric tcl-send (tk command &optional get-result))
 

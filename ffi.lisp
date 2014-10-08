@@ -6,8 +6,7 @@
   (defconstant +tcl-dont-wait+ 2))
 
 (defclass ffi-tk (tk)
-  ((interp :reader @interp)
-   (alive :initform t :accessor @alive)))
+  ((interp :accessor @interp)))
 
 (defmethod initialize-instance :after ((tk ffi-tk) &key &allow-other-keys)
   (format *trace-output* ";; let's create interp ~&")
@@ -20,14 +19,6 @@
     (register-all-procs)))
 
 (defmethod tk-destroy ((tk ffi-tk))
-  (when (@alive tk)
-    (setf (@alive tk) nil)
-    (delete-interp (@interp tk))))
-
-(defmethod tk-alive-p ((tk ffi-tk))
-  (@alive tk))
-
-(defmethod tk-doevent ((tk ffi-tk) &optional block)
-  (unless (@alive tk) (return-from tk-doevent nil))
-  (when (= (do-one-event (if block 0 +tcl-dont-wait+)) 1)
-    t))
+  (unless (cffi:null-pointer-p (@interp tk))
+    (delete-interp (@interp tk))
+    (setf (@interp tk) (cffi:null-pointer))))
