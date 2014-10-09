@@ -1,6 +1,6 @@
 (in-package :cl-user)
 
-(define-gui-function show-data-table (table-list-widget &key titles data)
+(cl-tk:define-gui-function show-data-table (table-list-widget &key titles data)
   (loop
      :initially
      (cl-tk:tcl table-list-widget "delete" "0" "end")
@@ -10,7 +10,7 @@
      :for row :in data
      :do (cl-tk:tcl table-list-widget "insert" "end" row)))
 
-(define-gui-function show-plist (table-list-widget row-format data)
+(cl-tk:define-gui-function show-plist (table-list-widget row-format data)
   (loop
      :initially
      (cl-tk:tcl table-list-widget "delete" "0" "end")
@@ -25,7 +25,7 @@
             :collect (format nil "~a" value) :into cells
             :finally (cl-tk:tcl table-list-widget "insert" "end" cells))))
 
-(define-gui-function setup-tablelist-toplevel (&optional (table-list-name ".table"))
+(cl-tk:define-gui-function setup-tablelist-toplevel (&optional (table-list-name ".table"))
   (cl-tk:tcl "package" "require" "tablelist")
   (let ((root-children (cl-tk:tcl "winfo" "children" ".")))
     (unless (null root-children)

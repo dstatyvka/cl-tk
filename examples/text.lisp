@@ -1,6 +1,6 @@
 (in-package :cl-user)
 
-(define-gui-function setup-text-toplevel (&optional (text-name ".text"))
+(cl-tk:define-gui-function setup-text-toplevel (&optional (text-name ".text"))
   (let ((root-children (cl-tk:tcl "winfo" "children" ".")))
     (unless (or (null root-children)
                 (and (stringp root-children) (string= "" root-children)))
@@ -149,6 +149,6 @@
       (let ((*indent-level* 0) *tags* *stack*)
            (dom:map-document sink doc)))))
 
-(define-gui-function show-xml-in-text (xml-document &optional (text ".text"))
+(cl-tk:define-gui-function show-xml-in-text (xml-document &optional (text ".text"))
   (cl-tk:tcl ".text" "delete" "1.0" "end")
   (dom:map-document (make-instance 'xml-text-handler :text text) xml-document))

@@ -2,7 +2,7 @@
 
 (defparameter *canvas* ".canvas")
 
-(define-gui-function setup-canvas-toplevel (&optional (canvas-name *canvas*))
+(cl-tk:define-gui-function setup-canvas-toplevel (&optional (canvas-name *canvas*))
   (let ((root-children (cl-tk:tcl "winfo" "children" ".")))
     (unless (or (null root-children)
                 (and (stringp root-children) (string= "" root-children)))
@@ -18,20 +18,20 @@
     (cl-tk:tcl "grid" "columnconfigure" "." 0 :weight 1)
     (cl-tk:tcl "grid" "rowconfigure" "." 0 :weight 1)))
 
-(define-gui-function canvas-update-scrolling ()
+(cl-tk:define-gui-function canvas-update-scrolling ()
   (cl-tk:tcl *canvas* "configure" :scrollregion (cl-tk:tcl *canvas* "bbox" "all")))
 
-(define-gui-function canvas-create-rect (x1 y1 x2 y2 &rest args)
+(cl-tk:define-gui-function canvas-create-rect (x1 y1 x2 y2 &rest args)
   (apply #'cl-tk:tcl *canvas* "create" "rectangle" (list x1 y1 x2 y2) args))
 
-(define-gui-function canvas-create-oval (x1 y1 x2 y2 &rest args)
+(cl-tk:define-gui-function canvas-create-oval (x1 y1 x2 y2 &rest args)
   (apply #'cl-tk:tcl *canvas* "create" "oval" (list x1 y1 x2 y2) args))
 
-(define-gui-function canvas-create-line (coords &rest args)
+(cl-tk:define-gui-function canvas-create-line (coords &rest args)
   (apply #'cl-tk:tcl *canvas* "create" "line" coords args))
 
-(define-gui-function canvas-create-text (x y text &rest args)
+(cl-tk:define-gui-function canvas-create-text (x y text &rest args)
   (apply #'cl-tk:tcl *canvas* "create" "text" x y :text text args))
 
-(define-gui-function canvas-clear ()
+(cl-tk:define-gui-function canvas-clear ()
   (cl-tk:tcl *canvas* "delete" "all"))

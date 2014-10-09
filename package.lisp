@@ -7,4 +7,8 @@
            #:defproc
            #:start-gui-loop
            #:call-in-gui-thread
-           #:with-gui-thread))
+           #:with-gui-thread
+	   #:define-gui-proc
+	   #:tcl!
+	   #:define-gui-function
+	   ))

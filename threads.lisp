@@ -51,3 +51,16 @@
        (if (in-gui-thread)
 	   (,name)
 	   (call-in-gui-thread #',name))))))
+
+(defmacro define-gui-function (name args &body body)
+  (alexandria:with-gensyms (body-closure)
+    `(defun ,name ,args
+       (flet ((,body-closure () ,@body))
+         (if (in-gui-thread)
+             (,body-closure)
+             (with-gui-thread ()
+               (,body-closure)))))))
+
+(define-gui-function tcl! (&rest words)
+  (with-gui-thread ()
+    (apply #'tcl words)))
